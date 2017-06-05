@@ -1,4 +1,4 @@
-package pro.kaczynska.training.loginregisterdatabindingactivity;
+package pro.kaczynska.training.loginregisterdatabinding;
 
 import org.junit.Test;
 

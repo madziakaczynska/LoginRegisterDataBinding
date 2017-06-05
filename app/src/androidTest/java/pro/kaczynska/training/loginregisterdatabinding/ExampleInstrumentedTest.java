@@ -1,4 +1,4 @@
-package pro.kaczynska.training.loginregisterdatabindingactivity;
+package pro.kaczynska.training.loginregisterdatabinding;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
