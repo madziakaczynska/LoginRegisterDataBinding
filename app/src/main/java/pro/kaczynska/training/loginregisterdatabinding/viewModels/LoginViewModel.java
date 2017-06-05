@@ -19,13 +19,23 @@ import pro.kaczynska.training.loginregisterdatabinding.adapters.SimpleTextWatche
 import pro.kaczynska.training.loginregisterdatabinding.models.User;
 
 public class LoginViewModel extends BaseObservable {
-    private String email;
+//    private String email;
+public ObservableString email = new ObservableString();
     private String password;
     private Context context;
     private String errorEmailMessage;
     private boolean errorEmailEnabled;
     private static final String EMPTY_STRING = "";
     private User user;
+
+    private static final String EMAIL_ADDRESS_PATTERN =
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+";
 
 
     public LoginViewModel(Context context) {
@@ -38,21 +48,21 @@ public class LoginViewModel extends BaseObservable {
         return new SimpleTextWatcher() {
             @Override
             public void onTextChanged(@NonNull String newValue) {
-                String emailString = newValue.trim();
-                boolean isEmailValid = isEmailValid(emailString);
-
-                setErrorEmailMessage(EMPTY_STRING);
-                setErrorEmailEnabled(false);
-                if (!isEmailValid) {
-                    setErrorEmailMessage(context.getResources().getString(R.string.error_message));
-                    setErrorEmailEnabled(true);
-                    return;
-                }
-                boolean accountExists = accountExists(emailString);
-                boolean isChanged = (user.getEmail() != null) && !(emailString.equals(user.getEmail()));
-                if (!accountExists && isChanged) {
-                    setEmail(emailString);
-                }
+//                String emailString = newValue.trim();
+//                boolean isEmailValid = isEmailValidOnFly(emailString);
+//
+//                setErrorEmailMessage(EMPTY_STRING);
+//                setErrorEmailEnabled(false);
+//                if (!isEmailValid) {
+//                    setErrorEmailMessage(context.getResources().getString(R.string.error_message));
+//                    setErrorEmailEnabled(true);
+//                    return;
+//                }
+//                boolean accountExists = accountExists(emailString);
+//                boolean isChanged = (user.getEmail() != null) && !(emailString.equals(user.getEmail()));
+//                if (!accountExists && isChanged) {
+//                    setEmail(emailString);
+//                }
             }
         };
     }
@@ -101,18 +111,26 @@ public class LoginViewModel extends BaseObservable {
         return string == null || string.isEmpty();
     }
 
+    private boolean isEmailValidOnFly(String emailString) {
+        return isValid(emailString, EMAIL_ADDRESS_PATTERN);
+    }
+
     private boolean isEmailValid(String emailString) {
-        return !isNullOrEmpty(emailString) && Patterns.EMAIL_ADDRESS.matcher(emailString).matches();
+        return !TextUtils.isEmpty(emailString) && Patterns.EMAIL_ADDRESS.matcher(emailString).matches();
     }
 
     private boolean accountExists(String emailString) {
         return user.getEmail().equals(emailString);
     }
 
+    public boolean isValid(String input, String PATTERN) {
+        Pattern pattern = Pattern.compile(PATTERN);
+        return pattern.matcher(input).matches();
+    }
+
     public boolean isValidPassword(String s) {
         final String PASSWORD_PATTERN = context.getResources().getString(R.string.password_pattern);
-        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
-        return !TextUtils.isEmpty(s) && pattern.matcher(s).matches();
+        return !TextUtils.isEmpty(s) && isValid(s, PASSWORD_PATTERN);
     }
 
     @BindingAdapter("android:errorEmailEnabled")
