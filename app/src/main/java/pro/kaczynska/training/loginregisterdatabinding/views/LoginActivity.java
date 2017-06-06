@@ -9,7 +9,7 @@ import pro.kaczynska.training.loginregisterdatabinding.databinding.ActivityLogin
 import pro.kaczynska.training.loginregisterdatabinding.viewModels.LoginViewModel;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends LifecycleActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
